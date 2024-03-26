@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Transaction;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -26,7 +27,14 @@ class TransactionController extends Controller
                 $transaction = $request->input('transaction');
 
                 if ($sender->wallet->balance >= $transaction) {
+                    DB::beginTransaction();
                     $this->send($sender, $receiver, $transaction);
+                    Transaction::create([
+                        'transaction' => $transaction,
+                        'sender' => $sender->id,
+                        'receiver' => $receiver->id,
+                    ]);
+                    DB::commit();
 
                     return response()->json([
                         'message' => 'Sent Transaction successfully!',
@@ -44,6 +52,11 @@ class TransactionController extends Controller
             }
         } catch (ValidationException $e) {
             return response()->json(['errors' => $e->validator->errors()->all()], 422);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'error' => $e->getMessage(),
+            ], 500);
         }
     }
     public function send($sender, $receiver, $transaction)

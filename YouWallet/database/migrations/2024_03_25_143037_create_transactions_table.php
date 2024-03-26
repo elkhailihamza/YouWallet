@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
             $table->float('transaction');
-            $table->foreignUuid('sender')->references('id')->on('users');
-            $table->foreignUuid('receiver')->references('id')->on('users'); 
+            $table->foreignUuid('sender')->constrained('users');
+            $table->foreignUuid('receiver')->constrained('users'); 
             $table->timestamps();
         });
     }

@@ -9,6 +9,9 @@ class Wallet extends Model
 {
     use HasFactory;
     protected $primaryKey = 'user_id';
+    protected $casts = [
+        'user_id' => 'string',
+    ];
 
     protected $fillable = [
         'user_id',
