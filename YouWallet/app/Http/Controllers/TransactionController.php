@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Transaction;
 use App\Models\User;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
@@ -16,42 +17,46 @@ class TransactionController extends Controller
         try {
             $request->validate([
                 'transaction' => 'required|numeric|gt:0',
-                'receiver' => 'required',
+                'receiver' => 'required|exists:users,id',
             ]);
 
-            $found = User::whereNot('id', $request->user()->id)->where('id', $request->input('receiver'))->first();
+            $sender = $request->user();
+            $receiver = User::findOrFail($request->input('receiver'));
+            $transaction = $request->input('transaction');
 
-            if ($found) {
-                $sender = $request->user();
-                $receiver = $found;
-                $transaction = $request->input('transaction');
-
-                if ($sender->wallet->balance >= $transaction) {
-                    DB::beginTransaction();
-                    $this->send($sender, $receiver, $transaction);
-                    Transaction::create([
-                        'transaction' => $transaction,
-                        'sender' => $sender->id,
-                        'receiver' => $receiver->id,
-                    ]);
-                    DB::commit();
-
-                    return response()->json([
-                        'message' => 'Sent Transaction successfully!',
-                        'balance' => 'Current balance: ' . $sender->wallet->balance,
-                    ]);
-                } else {
-                    return response()->json([
-                        'message' => 'Insufficiant funds!',
-                    ]);
-                }
-            } else {
+            if ($sender->id === $receiver->id) {
                 return response()->json([
-                    'message' => 'Receiver not found!'
-                ]);
+                    'message' => 'Sender cannot send a transaction to themselves.',
+                ], 422);
             }
+
+            if ($sender->wallet->balance < $transaction) {
+                return response()->json([
+                    'message' => 'Insufficient funds!',
+                ], 422);
+            }
+
+            DB::beginTransaction();
+            $this->send($sender, $receiver, $transaction);
+            Transaction::create([
+                'transaction' => $transaction,
+                'sender' => $sender->id,
+                'receiver' => $receiver->id,
+            ]);
+            DB::commit();
+
+            return response()->json([
+                'message' => 'Sent Transaction successfully!',
+                'balance' => 'Current balance: ' . $sender->wallet->balance,
+            ]);
         } catch (ValidationException $e) {
-            return response()->json(['errors' => $e->validator->errors()->all()], 422);
+            return response()->json([
+                'errors' => $e->validator->errors()->all()
+            ], 422);
+        } catch (ModelNotFoundException $e) {
+            return response()->json([
+                'message' => 'Receiver not found!'
+            ], 404);
         } catch (\Exception $e) {
             DB::rollBack();
             return response()->json([
