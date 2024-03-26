@@ -3,9 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use Illuminate\Support\Facades\Validator;
+use App\Models\Wallet;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 
@@ -40,11 +41,18 @@ class AuthController extends Controller
                 'password' => 'required|string|min:8',
             ]);
 
+            DB::beginTransaction();
             $user = User::create([
                 'name' => $request->input('name'),
                 'email' => $request->input('email'),
                 'password' => Hash::make($request->input('password')),
             ]);
+
+            $wallet = Wallet::create([
+                'user_id' => $user->id,
+                'balance' => '0',
+            ]);
+            DB::commit();
 
             $token = $user->createToken('auth_token')->plainTextToken;
 
@@ -58,10 +66,12 @@ class AuthController extends Controller
                 'message' => 'Registration Failed!',
                 'errors' => $e->validator->errors()->all(),
             ], 422);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'message' => 'Registration Failed!',
+                'error' => $e->getMessage(),
+            ], 500);
         }
-    }
-    public function me(Request $request)
-    {
-        return $request->user();
     }
 }

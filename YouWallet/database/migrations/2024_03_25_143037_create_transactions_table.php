@@ -14,10 +14,8 @@ return new class extends Migration
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
             $table->float('transaction');
-            $table->unsignedBigInteger('sender')->nullable();
-            $table->unsignedBigInteger('receiver')->nullable();
-            $table->foreign('sender')->references('id')->on('users')->onDelete('SET NULL');
-            $table->foreign('receiver')->references('id')->on('users')->onDelete('SET NULL'); 
+            $table->foreignUuid('sender')->references('id')->on('users');
+            $table->foreignUuid('receiver')->references('id')->on('users'); 
             $table->timestamps();
         });
     }
