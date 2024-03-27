@@ -11,10 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('wallets', function (Blueprint $table) {
-            $table->foreignUuid('user_id')->constrained('users')->unique();
-            $table->float('balance');
-            $table->timestamps();
+        Schema::create('roles', function (Blueprint $table) {
+            $table->id();
+            $table->string('role_name');
         });
     }
 
@@ -23,6 +22,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('wallets');
+        Schema::dropIfExists('roles');
     }
 };
