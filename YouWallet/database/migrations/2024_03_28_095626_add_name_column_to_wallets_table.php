@@ -11,11 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('wallets', function (Blueprint $table) {
-            $table->uuid('id');
-            $table->foreignUuid('user_id')->constrained('users')->unique();
-            $table->float('balance');
-            $table->timestamps();
+        Schema::table('wallets', function (Blueprint $table) {
+            $table->string('wallet_name')->after('user_id');
         });
     }
 
@@ -24,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('wallets');
+        Schema::table('wallets', function (Blueprint $table) {
+            //
+        });
     }
 };

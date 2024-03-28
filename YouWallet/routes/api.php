@@ -24,6 +24,7 @@ Route::controller(AuthController::class)->group(function () {
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/wallet', [WalletController::class, 'status']);
+    Route::post('/wallet/create', [WalletController::class, 'store']);
     Route::controller(TransactionController::class)->group(function () {
         Route::post('/send', 'check');
         Route::post('/fetch', 'fetch');

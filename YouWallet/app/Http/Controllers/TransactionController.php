@@ -4,12 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Transaction;
 use App\Models\User;
-use Dotenv\Repository\RepositoryInterface;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
-use Illuminate\Validation\Validator;
 
 class TransactionController extends Controller
 {

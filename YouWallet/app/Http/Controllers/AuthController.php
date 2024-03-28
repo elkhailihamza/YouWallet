@@ -36,7 +36,7 @@ class AuthController extends Controller
     {
         try {
             $request->validate([
-                'name' => 'required|string|min:3|max:255',
+                'name' => 'required|string|min:3|max:255|unique:users,name',
                 'email' => 'required|email|max:255|unique:users',
                 'password' => 'required|string|min:8',
             ]);
@@ -51,6 +51,7 @@ class AuthController extends Controller
 
             $wallet = Wallet::create([
                 'user_id' => $user->id,
+                'wallet_name' => $request->input('name'),
                 'balance' => '0',
             ]);
             DB::commit();
