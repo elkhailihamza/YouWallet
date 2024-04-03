@@ -72,6 +72,7 @@ export const Login = () => {
               className="px-1 py-2.5 border focus:none"
               autoComplete="username"
               placeholder="Email"
+              disabled={loading}
               onChange={handleChange}
               type="email"
             />
@@ -90,6 +91,7 @@ export const Login = () => {
               className="px-1 py-2.5 border focus:none shadow-sm"
               autoComplete="current-password"
               placeholder="Password"
+              disabled={loading}
               onChange={handleChange}
               type="password"
             />
@@ -122,7 +124,7 @@ export const Login = () => {
             ) : (
               <button
                 type="submit"
-                className="py-2.5 px-5 bg-blue-700 rounded-md shadow hover:underline"
+                className="py-2.5 px-5 bg-blue-700 hover:bg-blue-800 transition-all rounded-md shadow"
               >
                 Login
               </button>

@@ -31,6 +31,7 @@ export const Register = () => {
         "http://localhost:8000/api/register",
         data
       );
+      localStorage.setItem('TOKEN', response.data.access_token)
     } catch (error) {
       setErrors(error.response.data.errors);
     }
@@ -122,7 +123,7 @@ export const Register = () => {
             ) : (
               <button
                 type="submit"
-                className="py-2.5 px-5 bg-blue-700 rounded-md shadow hover:underline"
+                className="py-2.5 px-5 bg-blue-600 hover:bg-blue-700 rounded-md shadow"
               >
                 Register
               </button>
