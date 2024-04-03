@@ -1,6 +1,45 @@
+import axios from "axios";
+import { useState } from "react";
 import { Link } from "react-router-dom";
+import { SpinnerCircular } from "spinners-react";
 
 export const Login = () => {
+  const [data, setData] = useState({
+    email: "",
+    password: "",
+  });
+
+  const [loading, setLoading] = useState(false);
+  const [errors, setErrors] = useState([]);
+  const [errorWrong, setErrorWrong] = useState([]);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+
+    setData((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setErrors([]);
+    setErrorWrong([]);
+    try {
+      const response = await axios.post(
+        "http://localhost:8000/api/login",
+        data
+      );
+      console.log(response);
+    } catch (error) {
+      setErrors(error.response.data.errors);
+      setErrorWrong(error.response.data.error);
+    }
+    setLoading(false);
+  };
+
   return (
     <div className="flex flex-col h-screen justify-center items-center">
       <div className="flex gap-2 items-center justify-center p-5">
@@ -19,45 +58,75 @@ export const Login = () => {
         </svg>
         <h1 className="text-2xl font-medium">YouWallet</h1>
       </div>
-      <div className="border rounded-lg h-96 w-96 shadow-md mb-10">
+      <div className="border rounded-lg pb-10 w-96 shadow-md mb-10">
         <div className="text-center p-10 pb-7">
           <h1 className="text-2xl">Login</h1>
         </div>
-        <form className="flex flex-col gap-2 px-10">
-          <div className="grid gap-1">
-            <label>Email</label>
+        <form onSubmit={handleSubmit} className="flex flex-col gap-2 px-10">
+          <div className="grid">
+            <label className="my-1">Email</label>
             <input
               id="email"
+              name="email"
+              value={data.email}
               className="px-1 py-2.5 border focus:none"
+              autoComplete="username"
               placeholder="Email"
+              onChange={handleChange}
               type="email"
             />
+            {errors && errors.email && (
+              <span className="select-none bg-red-500 text-sm text-white p-1 mb-1">
+                {errors.email}
+              </span>
+            )}
           </div>
-          <div className="grid gap-1">
-            <label>Password</label>
+          <div className="grid">
+            <label className="my-1">Password</label>
             <input
               id="password"
+              name="password"
+              value={data.password}
               className="px-1 py-2.5 border focus:none shadow-sm"
+              autoComplete="current-password"
               placeholder="Password"
+              onChange={handleChange}
               type="password"
             />
+            {errors && errors.password && (
+              <span className="select-none bg-red-500 text-sm text-white p-1 mb-1">
+                {errors.password}
+              </span>
+            )}
           </div>
+          {errorWrong && errorWrong.length > 0 && (
+            <span className="select-none bg-red-500 text-sm text-white p-1">
+              {errorWrong}
+            </span>
+          )}
           <div>
             <span className="text-sm mt-2">
               Don't have an account?{" "}
-              <Link to="/auth/register" className="text-blue-700 hover:underline">
+              <Link
+                to="/auth/register"
+                className="text-blue-700 hover:underline"
+              >
                 sign-up
               </Link>{" "}
               now!
             </span>
           </div>
-          <div className="text-center text-white mt-3">
-            <button
-              type="submit"
-              className="py-2.5 px-5 bg-blue-700 rounded-md shadow"
-            >
-              Login
-            </button>
+          <div className="flex justify-center text-center text-white mt-3">
+            {loading ? (
+              <SpinnerCircular color="#000000" />
+            ) : (
+              <button
+                type="submit"
+                className="py-2.5 px-5 bg-blue-700 rounded-md shadow hover:underline"
+              >
+                Login
+              </button>
+            )}
           </div>
         </form>
       </div>

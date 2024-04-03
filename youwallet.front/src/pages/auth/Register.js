@@ -61,17 +61,15 @@ export const Register = () => {
         </div>
         <form
           onSubmit={handleSubmit}
-          className={`"flex flex-col px-10 ${loading ? "opacity-50" : ""}"`}
+          className="flex flex-col gap-2 px-10"
         >
           <div className="grid">
             <label className="my-1">Name</label>
             <input
               id="name"
-              typeof="text"
               name="name"
               value={data.name}
-              onChange={handleChange}
-              required
+              onChange={handleChange} 
               disabled={loading}
               className="px-2 py-2.5 border focus:none"
               placeholder="Full name"
@@ -83,11 +81,9 @@ export const Register = () => {
             <label className="my-1">Email</label>
             <input
               id="email"
-              typeof="email"
               name="email"
               value={data.email}
-              onChange={handleChange}
-              required
+              onChange={handleChange}       
               disabled={loading}
               className="px-2 py-2.5 border focus:none"
               placeholder="Email"
@@ -100,11 +96,9 @@ export const Register = () => {
             <label className="my-1">Password</label>
             <input
               id="password"
-              typeof="password"
               name="password"
               value={data.password}
-              onChange={handleChange}
-              required
+              onChange={handleChange} 
               disabled={loading}
               className="px-2 py-2.5 border focus:none"
               placeholder="Password"
