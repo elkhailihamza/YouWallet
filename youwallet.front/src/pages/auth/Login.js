@@ -1,17 +1,21 @@
-import axios from "axios";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { SpinnerCircular } from "spinners-react";
+import { useAuth } from "../../contexts/AuthContext/AuthContext";
+import { HOME } from "../../App";
+import axiosClient from "../../axios";
 
 export const Login = () => {
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+  const [errors, setErrors] = useState([]);
+  const [errorWrong, setErrorWrong] = useState([]);
+  const { stockAccess } = useAuth();
+
   const [data, setData] = useState({
     email: "",
     password: "",
   });
-
-  const [loading, setLoading] = useState(false);
-  const [errors, setErrors] = useState([]);
-  const [errorWrong, setErrorWrong] = useState([]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -28,11 +32,10 @@ export const Login = () => {
     setErrors([]);
     setErrorWrong([]);
     try {
-      const response = await axios.post(
-        "http://localhost:8000/api/login",
-        data
-      );
-      console.log(response);
+      const response = await axiosClient.post("/login", data);
+      if (stockAccess(response.data.access_token)) {
+        navigate(HOME);
+      }
     } catch (error) {
       setErrors(error.response.data.errors);
       setErrorWrong(error.response.data.error);

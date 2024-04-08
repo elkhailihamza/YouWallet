@@ -1,8 +1,9 @@
 import { NavLink } from "react-router-dom";
+import { useAuth } from "../contexts/AuthContext/AuthContext";
 
 export const Navbar = () => {
   return (
-    <nav className="py-5 px-20 select-none shadow-sm">
+    <nav className="py-5 md:px-20 px-5 select-none shadow">
       <div className="w-full flex justify-between">
         <div className="flex gap-2 items-center">
           <svg
@@ -20,25 +21,26 @@ export const Navbar = () => {
           </svg>
           <h1 className="text-2xl font-medium">YouWallet</h1>
         </div>
-        <ul className="flex flex-wrap items-center gap-5 font-medium">
+        <ul className="flex flex-wrap items-center md:gap-5 font-medium">
           <li>
             <NavLink to="/" className="inline-block hover:underline">
               Home
             </NavLink>
           </li>
-          <li>
-            <NavLink
-              to="/Transactions"
-              className="inline-block hover:underline"
-            >
-              Transactions
-            </NavLink>
-          </li>
-          <li>
-            <NavLink to="/Wallet" className="inline-block hover:underline">
-              Wallet
-            </NavLink>
-          </li>
+          <div className="md:block hidden">
+            <div className="flex gap-5">
+              <li>
+                <NavLink to="/transactions" className="hover:underline">
+                  Transactions
+                </NavLink>
+              </li>
+              <li>
+                <NavLink to="/wallet" className="hover:underline">
+                  Wallet
+                </NavLink>
+              </li>
+            </div>
+          </div>
           <li className="ms-7">
             <button
               id="dropdownDefaultButton"
@@ -70,20 +72,31 @@ export const Navbar = () => {
                 className="py-2 text-sm text-gray-700"
                 aria-labelledby="dropdownDefaultButton"
               >
+                <div className="md:hidden block">
+                  <li>
+                    <NavLink
+                      to="/transactions"
+                      className="hover:underline block px-4 py-2 hover:bg-gray-100"
+                    >
+                      Transactions
+                    </NavLink>
+                  </li>
+                  <li>
+                    <NavLink
+                      to="/wallet"
+                      className="hover:underline block px-4 py-2 hover:bg-gray-100"
+                    >
+                      Wallet
+                    </NavLink>
+                  </li>
+                </div>
                 <li>
-                  <a href="#" className="block px-4 py-2 hover:bg-gray-100">
-                    Dashboard
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="block px-4 py-2 hover:bg-gray-100">
+                  <NavLink
+                    to="/settings"
+                    className="hover:underline block px-4 py-2 hover:bg-gray-100"
+                  >
                     Settings
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="block px-4 py-2 hover:bg-gray-100">
-                    Earnings
-                  </a>
+                  </NavLink>
                 </li>
                 <li>
                   <a href="#" className="block px-4 py-2 hover:bg-gray-100">

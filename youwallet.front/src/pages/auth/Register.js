@@ -1,17 +1,21 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
-import axios from "axios";
 import { SpinnerCircular } from "spinners-react";
+import { HOME } from "../../App";
+import { useAuth } from "../../contexts/AuthContext/AuthContext";
+import axiosClient from "../../axios";
 
 export const Register = () => {
+  const navigate = useNavigate();
+  const { stockAccess } = useAuth();
+  const [loading, setLoading] = useState(false);
+  const [errors, setErrors] = useState([]);
+
   const [data, setData] = useState({
     name: "",
     email: "",
     password: "",
   });
-
-  const [loading, setLoading] = useState(false);
-  const [errors, setErrors] = useState([]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -27,11 +31,10 @@ export const Register = () => {
     setLoading(true);
     setErrors([]);
     try {
-      const response = await axios.post(
-        "http://localhost:8000/api/register",
-        data
-      );
-      localStorage.setItem('TOKEN', response.data.access_token)
+      const response = await axiosClient.post("/register", data);
+      if (stockAccess(response.data.access_token)) {
+        navigate(HOME);
+      }
     } catch (error) {
       setErrors(error.response.data.errors);
     }
@@ -60,23 +63,24 @@ export const Register = () => {
         <div className="text-center p-10 pb-7">
           <h1 className="text-2xl">Register</h1>
         </div>
-        <form
-          onSubmit={handleSubmit}
-          className="flex flex-col gap-2 px-10"
-        >
+        <form onSubmit={handleSubmit} className="flex flex-col gap-2 px-10">
           <div className="grid">
             <label className="my-1">Name</label>
             <input
               id="name"
               name="name"
               value={data.name}
-              onChange={handleChange} 
+              onChange={handleChange}
               disabled={loading}
               className="px-2 py-2.5 border focus:none"
               placeholder="Full name"
               type="text"
             />
-            {errors.name && <span className="select-none bg-red-500 text-sm text-white p-1 mb-1">{errors.name}</span>}
+            {errors && errors.name && (
+              <span className="select-none bg-red-500 text-sm text-white p-1 mb-1">
+                {errors.name}
+              </span>
+            )}
           </div>
           <div className="grid">
             <label className="my-1">Email</label>
@@ -84,14 +88,18 @@ export const Register = () => {
               id="email"
               name="email"
               value={data.email}
-              onChange={handleChange}       
+              onChange={handleChange}
               disabled={loading}
               className="px-2 py-2.5 border focus:none"
               placeholder="Email"
               autoComplete="username"
               type="email"
             />
-            {errors.email && <span className="select-none bg-red-500 text-sm text-white p-1 mb-1">{errors.email}</span>}
+            {errors && errors.email && (
+              <span className="select-none bg-red-500 text-sm text-white p-1 mb-1">
+                {errors.email}
+              </span>
+            )}
           </div>
           <div className="grid">
             <label className="my-1">Password</label>
@@ -99,14 +107,18 @@ export const Register = () => {
               id="password"
               name="password"
               value={data.password}
-              onChange={handleChange} 
+              onChange={handleChange}
               disabled={loading}
               className="px-2 py-2.5 border focus:none"
               placeholder="Password"
               autoComplete="current-password"
               type="password"
             />
-            {errors.password && <span className="select-none bg-red-500 text-sm text-white p-1 mb-1">{errors.password}</span>}
+            {errors && errors.password && (
+              <span className="select-none bg-red-500 text-sm text-white p-1 mb-1">
+                {errors.password}
+              </span>
+            )}
           </div>
           <div className="mt-2">
             <span className="text-sm">
@@ -123,7 +135,7 @@ export const Register = () => {
             ) : (
               <button
                 type="submit"
-                className="py-2.5 px-5 bg-blue-600 hover:bg-blue-700 rounded-md shadow"
+                className="py-2.5 px-5 bg-blue-600 hover:bg-blue-700 transition-all rounded-md shadow"
               >
                 Register
               </button>
