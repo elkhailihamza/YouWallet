@@ -41,7 +41,7 @@ export const Navbar = () => {
               </li>
             </div>
           </div>
-          <li className="ms-7">
+          <li>
             <button
               id="dropdownDefaultButton"
               data-dropdown-toggle="dropdown"

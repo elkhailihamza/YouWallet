@@ -10,13 +10,20 @@ export const AuthProvider = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState(null);
 
+  const check = () => {
+    if (localStorage.getItem("ACCESS_TOKEN")) {
+      setIsLoggedIn(true);
+      return isLoggedIn;
+    }
+  };
+
   const stockAccess = (token) => {
     if (token) {
       localStorage.setItem("ACCESS_TOKEN", token);
       setIsLoggedIn(true);
       return true;
     }
-    return false; 
+    return false;
   };
 
   const value = {
@@ -25,6 +32,7 @@ export const AuthProvider = ({ children }) => {
     user,
     setUser,
     stockAccess,
+    check,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
