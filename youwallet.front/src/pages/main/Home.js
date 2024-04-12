@@ -1,9 +1,12 @@
+import { useAuth } from "../../contexts/AuthContext/AuthContext";
+
 export const Home = () => {
+  const { user } = useAuth();
   return (
-    <div className="px-10 py-5">
-      <div className="text-center w-2/6 mt-10">
+    <div className="px-20 py-5">
+      <div className="mt-10">
         <h1 className="text-2xl">
-          Welcome, <span className="font-medium">user</span>!
+          Welcome, <span className="font-medium">{localStorage.getItem("USER")}</span>!
         </h1>
       </div>
     </div>

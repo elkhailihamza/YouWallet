@@ -17,9 +17,11 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const stockAccess = (token) => {
-    if (token) {
+  const stockAccess = (token, userInfo) => {
+    if (token && userInfo) {
       localStorage.setItem("ACCESS_TOKEN", token);
+      localStorage.setItem("USER", userInfo.name);
+      setUser(userInfo);
       setIsLoggedIn(true);
       return true;
     }
@@ -28,9 +30,7 @@ export const AuthProvider = ({ children }) => {
 
   const value = {
     isLoggedIn,
-    setIsLoggedIn,
     user,
-    setUser,
     stockAccess,
     check,
   };

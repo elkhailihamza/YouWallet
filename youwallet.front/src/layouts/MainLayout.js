@@ -20,11 +20,12 @@ export const MainLayout = () => {
   useEffect(() => {
     if (!loading) {
       if (!isLoggedIn) {
+        localStorage.clear();
         navigate(LOGIN);
       }
     }
   }, [loading, isLoggedIn, navigate]);
-  
+
   return (
     <div className="main-layout">
       {!loading && (

@@ -39,6 +39,11 @@ export const Navbar = () => {
                   Wallet
                 </NavLink>
               </li>
+              <li>
+                <NavLink to="/send" className="hover:underline">
+                  Send
+                </NavLink>
+              </li>
             </div>
           </div>
           <li>

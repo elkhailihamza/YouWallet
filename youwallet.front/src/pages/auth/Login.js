@@ -33,7 +33,9 @@ export const Login = () => {
     setErrorWrong([]);
     try {
       const response = await axiosClient.post("/login", data);
-      if (stockAccess(response.data.access_token)) {
+      console.log(response);
+      console.log(response.data.user);
+      if (stockAccess(response.data.access_token, response.data.user)) {
         navigate(HOME);
       }
     } catch (error) {

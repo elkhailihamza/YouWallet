@@ -12,7 +12,6 @@ export const Wallet = () => {
     const getInfo = async () => {
       try {
         const response = await axiosClient.post("/wallet");
-        console.log(response.data.Wallet[0]);
         setWallets(response.data.Wallet);
         setLoading(false);
       } catch (error) {
@@ -36,14 +35,14 @@ export const Wallet = () => {
           <h1 className="text-3xl medium">Wallets:</h1>
         )}
       </div>
-      <div className="flex px-20 py-10 divide-x-2">
+      <div className="flex px-20 py-10 divide-x-2 rounded-lg">
         {loading ? (
           <div className="w-full bg-gray-200 px-20 py-7 animate-pulse rounded-lg"></div>
         ) : (
           wallets.map((wallet, index) => (
             <div
               key={index}
-              className="flex transition-all justify-center hover:bg-gray-100 px-5 py-5 cursor-pointer w-full rounded-lg"
+              className="flex transition-all justify-center hover:bg-gray-100 px-5 py-5 cursor-pointer w-full"
               onClick={() => handleWalletClick(wallet)}
             >
               <h1 className="truncate">{wallet.wallet_name}</h1>

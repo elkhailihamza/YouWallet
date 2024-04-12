@@ -18,6 +18,7 @@ import { Home } from "./pages/main/Home";
 import { Transactions } from "./pages/main/Transactions";
 import { Wallet } from "./pages/main/Wallet";
 import { Settings } from "./pages/main/Settings";
+import { Send } from "./pages/main/Send";
 
 export const LOGIN = "/auth/login";
 export const HOME = "/";
@@ -30,6 +31,7 @@ const router = createBrowserRouter(
         <Route index path="home" element={<Home />} />
         <Route path="transactions" element={<Transactions />} />
         <Route path="wallet" element={<Wallet />} />
+        <Route path="send" element={<Send />} />
         <Route path="settings" element={<Settings />} />
       </Route>
       <Route path="auth" element={<AuthLayout />}>
